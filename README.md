@@ -1,50 +1,112 @@
-# Tokyo 2020 Olympics Analysis
+
+
+# Athlete Data Analysis Project
 
 ## Overview
 
-This project delves into the data from the Tokyo 2020 Olympics to uncover interesting insights related to country performance, athlete demographics, and gender distribution in various sports. It utilizes the power of Python libraries like pandas, matplotlib, seaborn, and plotly for comprehensive data analysis and visualization.
+This project focuses on analyzing data related to athletes, specifically exploring the relationship between athletes' ages, genders, and their profiles obtained from Wikidata. The main goals include:
 
-## Project Goals
-
-- Investigate if there's a correlation between a country's GDP and its overall success at the Olympics.
-- Explore the participation levels of male and female athletes throughout the games.
-- Analyze how athletes are distributed across different sports disciplines.
-- Examine the gender balance within each discipline to identify any potential disparities.
-
-## Data Sources
-
-- **Project Folder Dataset:** This project utilizes a dataset that is already included within the project folder. This dataset contains information about athletes, teams, coaches, medals, and gender entries for the Tokyo 2020 Olympics.
-
-## How to Run the Project
-
-This project is designed to be executed within a Google Colab environment. Follow these steps to get started:
-
-1. **Open the Notebook:** Open the primary Jupyter notebook file (typically named 'Olympics_Analysis.ipynb') in Google Colab. This notebook contains all the code necessary for the analysis.
-
-2. **Install Libraries:**
-   - In a code cell within the notebook, run the following command to install the required Python libraries:
-     `!pip install pandas matplotlib seaborn plotly wordcloud`
-
-3. **Run the Analysis:**  
-   - Execute each code cell in the notebook sequentially. The code will load the dataset, perform calculations, and generate visualizations to address the project goals.
-
-## Visualizations and Insights
-
-The analysis generates various visualizations to illustrate the findings, including:
-
-- **Scatter plots and regression lines:** To examine the relationship between GDP and Olympic medals won by different countries.
-- **Pie charts:** To depict the overall gender distribution of athletes participating in the Olympics.
-- **Bar charts:** To display the number of athletes in each sport, as well as the gender breakdown within each discipline.
-
-To see the results of these visualizations and interpret the insights, execute the code in the notebook.
-
+- Loading athlete data from a CSV file.
+- Fetching additional information from Wikidata.
+- Analyzing the age distribution of athletes by gender.
+- Visualizing the data using histograms.
 
 ## Requirements
 
-- **Google Colab account:** You'll need a Google account to access Google Colab.
+Before running the code, ensure you have the following packages installed:
 
+- `pandas`
+- `requests`
+- `matplotlib`
+- `seaborn`
+- `plotly`
 
-## Contributing
+You can install the necessary libraries using pip:
 
-Contributions to this project are welcome. If you'd like to contribute, please fork the repository and submit a pull request.
+```bash
+pip install pandas requests matplotlib seaborn plotly
+```
+
+## Directory Structure
+
+Ensure your directory structure looks like this:
+
+```
+/project_directory
+│
+├── Athletes.csv                   # Original athlete data file
+├── Athletes_Wikidata_FullName_Age.csv  # Processed athlete data with Wikidata info
+├── Not_Found_Names.txt            # Names not found in Wikidata
+└── athlete_analysis.py             # Main script for data analysis
+```
+
+## How to Run the Code
+
+1. **Clone the repository or download the files:**
+
+   Ensure all files are located in a single directory.
+
+2. **Load Data and Fetch Additional Info:**
+
+   Run the main script to load athlete data from the CSV file and fetch additional information from Wikidata.
+
+   ```python
+   # Load and process athletes data
+   processed_file_path = 'Athletes_Wikidata_FullName_Age.csv'
+   not_found_file_path = 'Not_Found_Names.txt'
+   athletes_csv = 'Athletes.csv'
+
+   results = process_athletes(athletes_csv, processed_file_path, not_found_file_path)
+   ```
+
+3. **Visualize Data:**
+
+   After processing the data, you can visualize the distribution of athletes' ages by gender. Here’s how you can do it:
+
+   ```python
+   # Import necessary libraries
+   import pandas as pd
+   import matplotlib.pyplot as plt
+   import seaborn as sns
+
+   # Load the processed data
+   df = pd.read_csv('Athletes_Wikidata_FullName_Age.csv')
+
+   # Filter and visualize data
+   df['age'] = pd.to_numeric(df['age'], errors='coerce')
+   df_filtered = df[(df['age'] >= 0) & (df['age'] <= 100)]
+   df_known_gender = df_filtered[df_filtered['gender'].isin(['Female', 'Male'])]
+
+   # Create a histogram
+   plt.figure(figsize=(12, 6))
+   sns.histplot(data=df_known_gender, x='age', hue='gender', multiple='dodge', bins=range(0, 101, 5), kde=False, palette={'Female': 'pink', 'Male': 'blue'})
+   plt.title("Distribution of Athletes' Ages by Gender")
+   plt.xlabel('Age')
+   plt.ylabel('Number of Athletes')
+   plt.xlim(0, 60)
+   plt.grid(True)
+   plt.show()
+   ```
+
+4. **Explore the Data:**
+
+   You can also explore the data by viewing the first few rows:
+
+   ```python
+   df.head()
+   ```
+
+## Code Explanation
+
+- The main script fetches athlete information from Wikidata based on names from a provided CSV file.
+- It processes the data to extract useful information like age and gender.
+- Finally, it generates visualizations to help analyze the distribution of athletes' ages by gender.
+
+## Contribution
+
+Feel free to contribute to this project by suggesting improvements, reporting issues, or submitting pull requests.
+
+## License
+
+This project is licensed under the MIT License. See the LICENSE file for more information.
 
